@@ -58,7 +58,6 @@ public abstract class Espaco {
 
     public abstract double calcularCustoReserva(int horas);
 
-    // ===================== toString =====================
     @Override
     public String toString() {
         return "Espaco {" +
