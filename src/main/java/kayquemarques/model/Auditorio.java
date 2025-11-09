@@ -13,7 +13,7 @@ public class Auditorio extends Espaco{
         return custo;
     }
 
-
+    @Override
     public String toString() {
         return getNome() + " (Auditório)";
     }

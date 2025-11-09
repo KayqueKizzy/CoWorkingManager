@@ -14,7 +14,7 @@ public class CabineIndividual extends Espaco {
         }
         return custo;
     }
-
+    @Override
     public String toString() {
         return getNome() + " (Cabine Individual)";
     }

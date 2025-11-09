@@ -19,7 +19,7 @@ public class SalaDeReuniao extends Espaco{
             return custo;
         }
 
-
+    @Override
         public String toString() {
             return getNome() + " (Projetor: " + (usaProjetor ? "Sim" : "Não") + ")";
         }
