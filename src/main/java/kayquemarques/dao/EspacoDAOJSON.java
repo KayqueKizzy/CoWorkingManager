@@ -1,79 +1,63 @@
 package kayquemarques.dao;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import kayquemarques.dao.interfaces.EspacoDAO;
 import kayquemarques.model.Espaco;
-import kayquemarques.model.Auditorio;
-import kayquemarques.model.CabineIndividual;
-import kayquemarques.model.SalaDeReuniao;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.Reader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EspacoDAOJSON {
+public class EspacoDAOJSON implements EspacoDAO {
 
     private static final String ARQUIVO = "espacos.json";
+
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(Espaco.class, new EspacoTypeAdapter())
             .create();
 
-    public void salvar(List<Espaco> espacos) {
-        try (FileWriter writer = new FileWriter(ARQUIVO)) {
-            gson.toJson(espacos, writer);
+    @Override
+    public void salvar(Espaco espaco) {
+        List<Espaco> lista = buscarTodos();
+        lista.removeIf(e -> e.getId() == espaco.getId());
+        lista.add(espaco);
+        salvarTodos(lista);
+    }
+
+    @Override
+    public void salvarTodos(List<Espaco> lista) {
+        try (Writer w = new FileWriter(ARQUIVO)) {
+            gson.toJson(lista, w);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public List<Espaco> carregar() {
-        try (Reader reader = new FileReader(ARQUIVO)) {
-            return gson.fromJson(reader, new TypeToken<List<Espaco>>() {
-            }.getType());
+    @Override
+    public Espaco buscarPorId(int id) {
+        return buscarTodos().stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<Espaco> buscarTodos() {
+        try (Reader r = new FileReader(ARQUIVO)) {
+            List<Espaco> lista = gson.fromJson(r, new TypeToken<List<Espaco>>(){}.getType());
+            return lista != null ? lista : new ArrayList<>();
         } catch (Exception e) {
             return new ArrayList<>();
         }
     }
 
-    public void adicionar(Espaco espaco) {
-        List<Espaco> espacos = carregar();
-        espacos.add(espaco);
-        salvar(espacos);
+    @Override
+    public void remover(int id) {
+        List<Espaco> lista = buscarTodos();
+        lista.removeIf(e -> e.getId() == id);
+        salvarTodos(lista);
     }
-
-    public void removerPorId(int id) {
-        List<Espaco> espacos = carregar();
-        espacos.removeIf(e -> e.getId() == id);
-        salvar(espacos);
-    }
-
-    public Espaco buscarPorId(int id) {
-        for (Espaco e : carregar()) {
-            if (e.getId() == id) return e;
-        }
-        return null;
-    }
-
-    public List<Espaco> listarTodos() {
-        return carregar();
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
