@@ -20,8 +20,6 @@ public class EspacoTypeAdapter implements JsonSerializer<Espaco>, JsonDeserializ
 
         if (espaco instanceof SalaDeReuniao s) {
             obj.addProperty("usaProjetor", s.isUsaProjetor());
-        } else if (espaco instanceof CabineIndividual c) {
-            obj.addProperty("acustica", c.isAcustica());
         } else if (espaco instanceof Auditorio a) {
             obj.addProperty("temPalco", a.isTemPalco());
             obj.addProperty("capacidadeExtra", a.getCapacidadeExtra());
