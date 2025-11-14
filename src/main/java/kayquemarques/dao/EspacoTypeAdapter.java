@@ -9,8 +9,24 @@ public class EspacoTypeAdapter implements JsonSerializer<Espaco>, JsonDeserializ
 
     @Override
     public JsonElement serialize(Espaco espaco, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject obj = context.serialize(espaco).getAsJsonObject();
+        JsonObject obj = new JsonObject();
+
+        obj.addProperty("id", espaco.getId());
+        obj.addProperty("nome", espaco.getNome());
+        obj.addProperty("capacidade", espaco.getCapacidade());
+        obj.addProperty("disponivel", espaco.isDisponivel());
+        obj.addProperty("precoPorHora", espaco.getPrecoPorHora());
         obj.addProperty("tipo", espaco.getClass().getSimpleName());
+
+        if (espaco instanceof SalaDeReuniao s) {
+            obj.addProperty("usaProjetor", s.isUsaProjetor());
+        } else if (espaco instanceof CabineIndividual c) {
+            obj.addProperty("acustica", c.isAcustica());
+        } else if (espaco instanceof Auditorio a) {
+            obj.addProperty("temPalco", a.isTemPalco());
+            obj.addProperty("capacidadeExtra", a.getCapacidadeExtra());
+        }
+
         return obj;
     }
 
@@ -33,4 +49,3 @@ public class EspacoTypeAdapter implements JsonSerializer<Espaco>, JsonDeserializ
         }
     }
 }
-
