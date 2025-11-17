@@ -1,4 +1,52 @@
 package kayquemarques.service;
 
+import kayquemarques.dao.interfaces.Persistencia;
+import kayquemarques.model.Pagamento;
+import kayquemarques.model.Reserva;
+
+import java.time.LocalDate;
+
 public class PagamentoService {
+
+    private final Persistencia<Pagamento> pagamentoDAO;
+    private final Persistencia<Reserva> reservaDAO;
+
+    public PagamentoService(Persistencia<Pagamento> pagamentoDAO,
+                            Persistencia<Reserva> reservaDAO) {
+        this.pagamentoDAO = pagamentoDAO;
+        this.reservaDAO = reservaDAO;
+    }
+
+    public void registrarPagamento(Pagamento pagamento) {
+        if (pagamento.getValorPago() <= 0)
+            throw new IllegalArgumentException("Valor inválido.");
+
+        Reserva r = reservaDAO.buscarPorId(pagamento.getReserva().getId());
+
+        if (r == null)
+            throw new IllegalArgumentException("Reserva não encontrada.");
+
+        if (pagamento.getValorPago() != r.getValorTotal())
+            throw new IllegalArgumentException("Valor pago diferente do valor total da reserva.");
+
+        if (pagamento.getMetodo() == null || pagamento.getMetodo().isBlank())
+            throw new IllegalArgumentException("Método inválido.");
+
+        if (pagamento.getDataPagamento().isAfter(LocalDate.now()))
+            throw new IllegalArgumentException("Data futura inválida.");
+
+        pagamentoDAO.salvar(pagamento);
+    }
+
+    public Pagamento buscarPorId(int id) {
+        return pagamentoDAO.buscarPorId(id);
+    }
+
+    public void remover(int id) {
+        pagamentoDAO.remover(id);
+    }
+
+    public java.util.List<Pagamento> buscarTodos() {
+        return pagamentoDAO.buscarTodos();
+    }
 }
