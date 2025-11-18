@@ -10,6 +10,9 @@ public class SalaDeReuniao extends Espaco{
             this.usaProjetor = usaProjetor;
         }
 
+        public boolean isUsaProjetor() {
+            return usaProjetor;
+    }
 
         public double calcularCustoReserva(int horas) {
             double custo = getPrecoPorHora() * horas;
