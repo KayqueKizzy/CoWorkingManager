@@ -1,4 +1,4 @@
-package kayquemarques.dao.interfases;
+package kayquemarques.dao.interfaces;
 
 import kayquemarques.model.Pagamento;
 
