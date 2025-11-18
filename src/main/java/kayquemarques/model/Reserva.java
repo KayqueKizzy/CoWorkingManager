@@ -7,26 +7,31 @@ public class Reserva {
 
     private int id;
     private Espaco espaco;
-    private LocalDateTime dataHoraInicio;
-    private LocalDateTime dataHoraFim;
+    private LocalDateTime inicio;
+    private LocalDateTime fim;
     private double valorTotal;
     private String status;
     private double multaCancelamento;
 
-    public Reserva(int id, Espaco espaco, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
-        if (espaco == null) throw new IllegalArgumentException("Espaço inválido");
-        if (dataHoraInicio == null || dataHoraFim == null) throw new IllegalArgumentException("Datas inválidas");
-        if (!dataHoraFim.isAfter(dataHoraInicio)) throw new IllegalArgumentException("Data/hora final deve ser posterior à inicial");
-        if (!espaco.isDisponivel()) throw new IllegalArgumentException("Espaço indisponível");
+    public Reserva(int id, Espaco espaco, LocalDateTime inicio, LocalDateTime fim) {
+
+        if (espaco == null)
+            throw new IllegalArgumentException("Espaço inválido");
+
+        if (inicio == null || fim == null)
+            throw new IllegalArgumentException("Datas inválidas");
+
+        if (!fim.isAfter(inicio))
+            throw new IllegalArgumentException("A data final deve ser depois da inicial");
 
         this.id = id;
         this.espaco = espaco;
-        this.dataHoraInicio = dataHoraInicio;
-        this.dataHoraFim = dataHoraFim;
+        this.inicio = inicio;
+        this.fim = fim;
+
         this.valorTotal = calcularValorTotal();
         this.status = "ATIVA";
         this.multaCancelamento = 0.0;
-        this.espaco.setDisponivel(false);
     }
 
     public int getId() {
@@ -37,12 +42,12 @@ public class Reserva {
         return espaco;
     }
 
-    public LocalDateTime getDataHoraInicio() {
-        return dataHoraInicio;
+    public LocalDateTime getInicio() {
+        return inicio;
     }
 
-    public LocalDateTime getDataHoraFim() {
-        return dataHoraFim;
+    public LocalDateTime getFim() {
+        return fim;
     }
 
     public double getValorTotal() {
@@ -57,50 +62,48 @@ public class Reserva {
         return multaCancelamento;
     }
 
-    public double calcularDuracaoEmHoras() {
-        long minutos = Duration.between(dataHoraInicio, dataHoraFim).toMinutes();
+    public double calcularDuracaoHoras() {
+        long minutos = Duration.between(inicio, fim).toMinutes();
         return minutos / 60.0;
     }
 
     public double calcularValorTotal() {
-        double horas = calcularDuracaoEmHoras();
+        double horas = calcularDuracaoHoras();
         return espaco.calcularCustoReserva((int) Math.ceil(horas));
     }
 
     public double calcularMultaCancelamento() {
-        LocalDateTime agora = LocalDateTime.now();
-        if (agora.isAfter(dataHoraInicio)) {
-            throw new IllegalStateException("Não é possível cancelar após o início da reserva");
-        }
-        long horasAteInicio = Duration.between(agora, dataHoraInicio).toHours();
-        if (horasAteInicio >= 24) {
+        long horasAntes = Duration.between(LocalDateTime.now(), inicio).toHours();
+        if (horasAntes >= 24)
             return 0.0;
-        } else {
-            return valorTotal * 0.20;
-        }
+        return valorTotal * 0.20;
     }
 
     public double cancelar() {
-        if (!"ATIVA".equals(status)) throw new IllegalStateException("A reserva não pode ser cancelada");
+        if (!status.equals("ATIVA"))
+            throw new IllegalStateException("A reserva não pode ser cancelada.");
+
         double multa = calcularMultaCancelamento();
-        this.multaCancelamento = multa;
         this.status = "CANCELADA";
-        this.espaco.setDisponivel(true);
+        this.multaCancelamento = multa;
+
         return multa;
     }
 
     public void concluir() {
-        if (!"ATIVA".equals(status)) throw new IllegalStateException("A reserva não pode ser concluída");
-        status = "CONCLUIDA";
+        if (!status.equals("ATIVA"))
+            throw new IllegalStateException("A reserva não pode ser concluída.");
+
+        this.status = "CONCLUIDA";
     }
 
     @Override
     public String toString() {
         return "Reserva " + id +
                 " | Espaço: " + espaco.getNome() +
-                " | Início: " + dataHoraInicio +
-                " | Fim: " + dataHoraFim +
-                " | Valor: R$" + valorTotal +
+                " | Início: " + inicio +
+                " | Fim: " + fim +
+                " | Valor Total: R$" + valorTotal +
                 " | Status: " + status +
                 " | Multa: R$" + multaCancelamento;
     }
