@@ -22,8 +22,8 @@ public class RelatorioService {
 
     public List<Reserva> reservasPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
         return reservaDAO.buscarTodos().stream()
-                .filter(r -> !(r.getDataHoraFim().isBefore(inicio)
-                        || r.getDataHoraInicio().isAfter(fim)))
+                .filter(r -> !(r.getFim().isBefore(inicio)
+                        || r.getInicio().isAfter(fim)))
                 .collect(Collectors.toList());
     }
 
@@ -38,13 +38,8 @@ public class RelatorioService {
     public Map<String, Double> faturamentoPorTipoDeEspaco() {
         Map<String, Double> mapa = new HashMap<>();
 
-        List<Pagamento> pagamentos = pagamentoDAO.buscarTodos();
-
-        for (Pagamento p : pagamentos) {
-            Reserva r = p.getReserva();
-            Espaco e = r.getEspaco();
-            String tipo = e.getClass().getSimpleName();
-
+        for (Pagamento p : pagamentoDAO.buscarTodos()) {
+            String tipo = p.getReserva().getEspaco().getClass().getSimpleName();
             mapa.put(tipo, mapa.getOrDefault(tipo, 0.0) + p.getValorPago());
         }
 
