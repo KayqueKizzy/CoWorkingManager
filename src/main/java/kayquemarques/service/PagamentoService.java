@@ -21,6 +21,7 @@ public class PagamentoService {
         if (pagamento.getValorPago() <= 0)
             throw new IllegalArgumentException("Valor inválido.");
 
+
         Reserva r = reservaDAO.buscarPorId(pagamento.getReserva().getId());
 
         if (r == null)
@@ -38,6 +39,9 @@ public class PagamentoService {
         pagamentoDAO.salvar(pagamento);
     }
 
+    public Reserva buscarReserva(int idReserva) {
+        return reservaDAO.buscarPorId(idReserva);
+    }
     public Pagamento buscarPorId(int id) {
         return pagamentoDAO.buscarPorId(id);
     }
