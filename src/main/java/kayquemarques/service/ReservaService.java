@@ -1,8 +1,12 @@
 package kayquemarques.service;
 
 import kayquemarques.dao.interfaces.Persistencia;
+import kayquemarques.exception.DadosInvalidosException;
+import kayquemarques.exception.ReservaNaoEncontradaException;
+import kayquemarques.exception.ReservaSobrepostaException;
 import kayquemarques.model.Reserva;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,58 +18,59 @@ public class ReservaService {
         this.dao = dao;
     }
 
-    public void salvar(Reserva nova) {
+    public void salvar(Reserva novaReserva) {
 
-        if (nova == null)
-            throw new IllegalArgumentException("Reserva inválida.");
+        if (novaReserva == null)
+            throw new DadosInvalidosException("A reserva não pode ser nula.");
 
-        if (nova.getEspaco() == null)
-            throw new IllegalArgumentException("Espaço inválido.");
+        if (novaReserva.getEspaco() == null)
+            throw new DadosInvalidosException("A reserva precisa de um espaço.");
 
-        if (nova.getInicio() == null || nova.getFim() == null)
-            throw new IllegalArgumentException("Datas inválidas.");
-
-        if (!nova.getFim().isAfter(nova.getInicio()))
-            throw new IllegalArgumentException("A data final deve ser depois da inicial.");
+        if (novaReserva.calcularDuracaoHoras() <= 0)
+            throw new DadosInvalidosException("A duração deve ser maior que zero.");
 
         List<Reserva> existentes = dao.buscarTodos();
 
         for (Reserva r : existentes) {
 
-            if (r.getId() == nova.getId())
+            if (r.getId() == novaReserva.getId())
                 continue;
 
-            boolean mesmoEspaco = r.getEspaco().getId() == nova.getEspaco().getId();
+            boolean mesmoEspaco =
+                    r.getEspaco().getId() == novaReserva.getEspaco().getId();
 
             if (!mesmoEspaco)
                 continue;
 
             boolean conflito =
-                    nova.getInicio().isBefore(r.getFim())
-                            && nova.getFim().isAfter(r.getInicio());
+                    novaReserva.getInicio().isBefore(r.getFim()) &&
+                            novaReserva.getFim().isAfter(r.getInicio());
 
             if (conflito)
-                throw new IllegalArgumentException("O espaço já está reservado neste horário.");
+                throw new ReservaSobrepostaException("O espaço já está reservado nesse horário.");
         }
 
-        dao.salvar(nova);
+        dao.salvar(novaReserva);
     }
 
     public double cancelarReserva(int idReserva) {
 
-        Reserva r = dao.buscarPorId(idReserva);
+        Reserva reserva = dao.buscarPorId(idReserva);
 
-        if (r == null)
-            throw new IllegalArgumentException("Reserva não encontrada.");
+        if (reserva == null)
+            throw new ReservaNaoEncontradaException("Reserva não encontrada.");
 
-        if (!r.getStatus().equals("ATIVA"))
-            throw new IllegalArgumentException("A reserva não pode ser cancelada.");
+        long horasAntes =
+                Duration.between(LocalDateTime.now(), reserva.getInicio()).toHours();
 
-        double multa = r.calcularMultaCancelamento();
+        double multa = 0;
 
-        r.cancelar();
+        if (horasAntes < 24) {
+            multa = reserva.getValorTotal() * 0.20;
+        }
 
-        dao.salvar(r);
+        reserva.cancelar();
+        dao.salvar(reserva);
 
         return multa;
     }
