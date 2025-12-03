@@ -5,6 +5,8 @@ public class Auditorio extends Espaco{
     private boolean temPalco;
     private int capacidadeExtra;
 
+    public Auditorio() { }
+
     public Auditorio(int id, String nome, int capacidade, boolean disponivel,
                      double precoPorHora, boolean temPalco, int capacidadeExtra) {
         super(id, nome, capacidade, disponivel, precoPorHora);

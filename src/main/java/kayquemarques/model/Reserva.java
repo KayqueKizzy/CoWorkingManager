@@ -13,6 +13,8 @@ public class Reserva {
     private String status;
     private double multaCancelamento;
 
+    public Reserva() {}
+
     public Reserva(int id, Espaco espaco, LocalDateTime inicio, LocalDateTime fim) {
 
         if (espaco == null)

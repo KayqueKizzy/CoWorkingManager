@@ -2,6 +2,8 @@ package kayquemarques.model;
 
 public class CabineIndividual extends Espaco {
 
+    public CabineIndividual() { }
+
     public CabineIndividual(int id, String nome, int capacidade, boolean disponivel, double precoPorHora) {
         super(id, nome, capacidade, disponivel, precoPorHora);
     }

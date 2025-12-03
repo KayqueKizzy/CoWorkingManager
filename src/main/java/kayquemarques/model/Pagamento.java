@@ -9,6 +9,8 @@ public class Pagamento {
     private LocalDate dataPagamento;
     private String metodo;
 
+    public Pagamento() {}
+
     public Pagamento(int id, Reserva reserva, double valorPago, LocalDate dataPagamento, String metodo) {
         if (reserva == null) throw new IllegalArgumentException("Reserva inválida");
         if (valorPago <= 0) throw new IllegalArgumentException("Valor deve ser maior que zero");

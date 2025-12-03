@@ -4,6 +4,8 @@ public class SalaDeReuniao extends Espaco{
 
         private boolean usaProjetor;
 
+    public SalaDeReuniao() { }
+
         public SalaDeReuniao(int id, String nome, int capacidade, boolean disponivel,
                              double precoPorHora, boolean usaProjetor) {
             super(id, nome, capacidade, disponivel, precoPorHora);

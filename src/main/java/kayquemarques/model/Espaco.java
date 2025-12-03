@@ -7,6 +7,8 @@ public abstract class Espaco {
     private boolean disponivel;
     private double precoPorHora;
 
+    public Espaco() { }
+
     public Espaco(int id, String nome, int capacidade, boolean disponivel, double precoPorHora) {
         this.id = id;
         this.nome = nome;
