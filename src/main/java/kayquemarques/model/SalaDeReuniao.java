@@ -1,7 +1,9 @@
 package kayquemarques.model;
 
-public class SalaDeReuniao extends Espaco{
+import kayquemarques.dao.EspacoDTO;
 
+public class SalaDeReuniao extends Espaco{
+    private String TIPO = "Sala de Reuniao";
         private boolean usaProjetor;
 
     public SalaDeReuniao() { }
@@ -10,8 +12,13 @@ public class SalaDeReuniao extends Espaco{
                              double precoPorHora, boolean usaProjetor) {
             super(id, nome, capacidade, disponivel, precoPorHora);
             this.usaProjetor = usaProjetor;
+            this.TIPO = TIPO;
         }
-
+        public SalaDeReuniao(EspacoDTO espacoDTO) {
+            super(espacoDTO);
+            this.usaProjetor = espacoDTO.isUsaProjetor();
+            this.TIPO = TIPO;
+        }
         public boolean isUsaProjetor() {
             return usaProjetor;
     }

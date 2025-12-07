@@ -3,8 +3,12 @@ package kayquemarques.dao;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import kayquemarques.dao.interfaces.EspacoDAO;
+import kayquemarques.model.Auditorio;
+import kayquemarques.model.CabineIndividual;
 import kayquemarques.model.Espaco;
+import kayquemarques.model.SalaDeReuniao;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,15 +24,15 @@ public class EspacoDAOJSON implements EspacoDAO {
             .create();
 
     @Override
-    public void salvar(Espaco espaco) {
-        List<Espaco> lista = buscarTodos();
+    public void salvar(EspacoDTO espaco) {
+        List<EspacoDTO> lista = buscarTodos();
         lista.removeIf(e -> e.getId() == espaco.getId());
         lista.add(espaco);
         salvarTodos(lista);
     }
 
     @Override
-    public void salvarTodos(List<Espaco> lista) {
+    public void salvarTodos(List<EspacoDTO> lista) {
         try (Writer w = new FileWriter(ARQUIVO)) {
             gson.toJson(lista, w);
         } catch (Exception e) {
@@ -37,7 +41,7 @@ public class EspacoDAOJSON implements EspacoDAO {
     }
 
     @Override
-    public Espaco buscarPorId(int id) {
+    public EspacoDTO buscarPorId(int id) {
         return buscarTodos().stream()
                 .filter(e -> e.getId() == id)
                 .findFirst()
@@ -45,19 +49,22 @@ public class EspacoDAOJSON implements EspacoDAO {
     }
 
     @Override
-    public List<Espaco> buscarTodos() {
+    public List<EspacoDTO> buscarTodos() {
         try (Reader r = new FileReader(ARQUIVO)) {
-            List<Espaco> lista = gson.fromJson(r, new TypeToken<List<Espaco>>(){}.getType());
+            List<EspacoDTO> lista = gson.fromJson(r, new TypeToken<List<EspacoDTO>>(){}.getType());
             return lista != null ? lista : new ArrayList<>();
         } catch (Exception e) {
+            System.err.println("Erro crítico ao ler JSON com Gson: " + e.getMessage());
+            e.printStackTrace(); // Mostre o erro!
             return new ArrayList<>();
         }
     }
 
     @Override
     public void remover(int id) {
-        List<Espaco> lista = buscarTodos();
+        List<EspacoDTO> lista = buscarTodos();
         lista.removeIf(e -> e.getId() == id);
         salvarTodos(lista);
     }
+
 }

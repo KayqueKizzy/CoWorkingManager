@@ -1,9 +1,11 @@
 package kayquemarques.controller;
 
+import kayquemarques.dao.EspacoDTO;
 import kayquemarques.model.Espaco;
 import kayquemarques.model.Reserva;
 import kayquemarques.service.EspacoService;
 import kayquemarques.service.ReservaService;
+import kayquemarques.service.utils.ConversorDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +15,10 @@ public class ReservaController {
     private final ReservaService reservaService;
     private final EspacoService espacoService;
 
+    public ReservaController() {
+        this.reservaService = new ReservaService();
+        this.espacoService = new EspacoService();
+    }
     public ReservaController(ReservaService reservaService, EspacoService espacoService) {
         this.reservaService = reservaService;
         this.espacoService = espacoService;
@@ -23,7 +29,7 @@ public class ReservaController {
                              LocalDateTime inicio,
                              LocalDateTime fim) {
 
-        Espaco espaco = espacoService.buscarPorId(idEspaco);
+        EspacoDTO espaco = ConversorDTO.conversorEspacoToDTO(espacoService.buscarPorId(idEspaco));
 
         if (espaco == null)
             throw new IllegalArgumentException("Espaço não encontrado.");

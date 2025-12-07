@@ -1,12 +1,15 @@
 package kayquemarques.model;
 
+import kayquemarques.dao.EspacoDTO;
+import kayquemarques.service.utils.ConversorDTO;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Reserva {
 
     private int id;
-    private Espaco espaco;
+    private EspacoDTO espaco;
     private LocalDateTime inicio;
     private LocalDateTime fim;
     private double valorTotal;
@@ -15,7 +18,7 @@ public class Reserva {
 
     public Reserva() {}
 
-    public Reserva(int id, Espaco espaco, LocalDateTime inicio, LocalDateTime fim) {
+    public Reserva(int id, EspacoDTO espaco, LocalDateTime inicio, LocalDateTime fim) {
 
         if (espaco == null)
             throw new IllegalArgumentException("Espaço inválido");
@@ -40,7 +43,7 @@ public class Reserva {
         return id;
     }
 
-    public Espaco getEspaco() {
+    public EspacoDTO getEspaco() {
         return espaco;
     }
 
@@ -64,14 +67,51 @@ public class Reserva {
         return multaCancelamento;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMultaCancelamento(double multaCancelamento) {
+        this.multaCancelamento = multaCancelamento;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public void setFim(LocalDateTime fim) {
+        this.fim = fim;
+    }
+
+    public void setInicio(LocalDateTime inicio) {
+        this.inicio = inicio;
+    }
+
+    public void setEspaco(EspacoDTO espaco) {
+        this.espaco = espaco;
+    }
+
     public double calcularDuracaoHoras() {
         long minutos = Duration.between(inicio, fim).toMinutes();
         return minutos / 60.0;
     }
-
+    /**
+     * @return o valor total da reserva com base na duração em horas e no custo por hora do espaço.
+     * */
     public double calcularValorTotal() {
         double horas = calcularDuracaoHoras();
-        return espaco.calcularCustoReserva((int) Math.ceil(horas));
+        /** Convertendo EspacoDTO para Espaco usando o ConversorDTO
+         *  como reserva não pode ter classe Espaco diretamente,
+         *  é necessário fazer essa conversão para acessar o método calcularCustoReserva.
+         *
+        * */
+        Espaco espacoObj = ConversorDTO.conversorDTOToEspaco(espaco);
+
+        return espacoObj.calcularCustoReserva((int) Math.ceil(horas));
     }
 
     public double calcularMultaCancelamento() {

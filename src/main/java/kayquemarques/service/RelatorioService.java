@@ -4,6 +4,7 @@ import kayquemarques.dao.interfaces.Persistencia;
 import kayquemarques.model.Espaco;
 import kayquemarques.model.Pagamento;
 import kayquemarques.model.Reserva;
+import kayquemarques.service.utils.ConversorDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -50,7 +51,7 @@ public class RelatorioService {
         Map<Espaco, Long> mapa = new HashMap<>();
 
         for (Reserva r : reservaDAO.buscarTodos()) {
-            Espaco e = r.getEspaco();
+            Espaco e = ConversorDTO.conversorDTOToEspaco(r.getEspaco());
             mapa.put(e, mapa.getOrDefault(e, 0L) + 1L);
         }
 

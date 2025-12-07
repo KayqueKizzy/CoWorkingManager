@@ -1,18 +1,21 @@
 package kayquemarques.service;
 
+import kayquemarques.dao.EspacoDAOJSON;
+import kayquemarques.dao.EspacoDTO;
 import kayquemarques.dao.interfaces.Persistencia;
 import kayquemarques.model.Espaco;
 import kayquemarques.exception.DadosInvalidosException;
 import kayquemarques.exception.EspacoNaoEncontradoException;
+import kayquemarques.service.utils.ConversorDTO;
 
 import java.util.List;
 
 public class EspacoService {
 
-    private final Persistencia<Espaco> dao;
+    private final Persistencia<EspacoDTO> dao;
 
-    public EspacoService(Persistencia<Espaco> dao) {
-        this.dao = dao;
+    public EspacoService() {
+        this.dao = new EspacoDAOJSON();
     }
 
     public void salvar(Espaco espaco) {
@@ -29,10 +32,10 @@ public class EspacoService {
             throw new DadosInvalidosException("O preço por hora deve ser positivo.");
         }
 
-        dao.salvar(espaco);
+        dao.salvar(ConversorDTO.conversorEspacoToDTO(espaco));
     }
     public Espaco buscarPorId(int id) {
-        Espaco e = dao.buscarPorId(id);
+        Espaco e = ConversorDTO.conversorDTOToEspaco(dao.buscarPorId(id));
         if (e == null) {
             throw new EspacoNaoEncontradoException("Espaço não encontrado.");
         }
@@ -40,7 +43,7 @@ public class EspacoService {
     }
 
     public List<Espaco> buscarTodos() {
-        return dao.buscarTodos();
+        return ConversorDTO.conversorListaDTOToListaEspaco(dao.buscarTodos());
     }
 
     public void remover(int id) {

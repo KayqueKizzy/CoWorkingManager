@@ -1,6 +1,7 @@
 package kayquemarques.service;
 
 
+import kayquemarques.dao.ReservaDAOJSON;
 import kayquemarques.dao.interfaces.Persistencia;
 import kayquemarques.exception.DadosInvalidosException;
 import kayquemarques.exception.ReservaNaoEncontradaException;
@@ -15,8 +16,8 @@ public class ReservaService {
 
     private final Persistencia<Reserva> dao;
 
-    public ReservaService(Persistencia<Reserva> dao) {
-        this.dao = dao;
+    public ReservaService() {
+        this.dao = new ReservaDAOJSON();
     }
 
     public void salvar(Reserva novaReserva) {

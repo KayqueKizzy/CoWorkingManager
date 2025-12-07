@@ -1,5 +1,7 @@
 package kayquemarques.model;
 
+import kayquemarques.dao.EspacoDTO;
+
 public abstract class Espaco {
     private int id;
     private String nome;
@@ -17,6 +19,13 @@ public abstract class Espaco {
         this.precoPorHora = precoPorHora;
     }
 
+    public Espaco(EspacoDTO espacoDTO) {
+        this.id = espacoDTO.getId();
+        this.nome = espacoDTO.getNome();
+        this.capacidade = espacoDTO.getCapacidade();
+        this.disponivel = espacoDTO.isDisponivel();
+        this.precoPorHora = espacoDTO.getPrecoPorHora();
+    }
     public int getId() {
         return id;
     }

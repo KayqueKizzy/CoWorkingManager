@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import kayquemarques.dao.interfaces.ReservaDAO;
+import kayquemarques.model.Espaco;
 import kayquemarques.model.Reserva;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,12 @@ public class ReservaDAOJSON implements ReservaDAO {
     private static final String ARQUIVO = "reservas.json";
 
     private static final Gson gson = new GsonBuilder()
+            // REGISTRA o adaptador para a classe LocalDateTime
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            // Opcional: para formatar o JSON de saída de forma mais legível
             .setPrettyPrinting()
             .create();
+
 
     @Override
     public void salvar(Reserva reserva) {
