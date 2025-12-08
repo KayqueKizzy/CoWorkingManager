@@ -47,6 +47,9 @@ public class EspacoDAOJSON implements EspacoDAO {
 
     @Override
     public List<EspacoDTO> buscarTodos() {
+        if(!new File(ARQUIVO).exists()) {
+            return new ArrayList<>();
+        }
         try (Reader r = new FileReader(ARQUIVO)) {
             List<EspacoDTO> lista = gson.fromJson(r, new TypeToken<List<EspacoDTO>>(){}.getType());
             return lista != null ? lista : new ArrayList<>();

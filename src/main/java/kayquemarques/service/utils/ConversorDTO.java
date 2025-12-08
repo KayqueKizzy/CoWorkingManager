@@ -1,7 +1,6 @@
 package kayquemarques.service.utils;
 
 import kayquemarques.dao.EspacoDTO;
-import kayquemarques.dao.ReservaDTO;
 import kayquemarques.model.*;
 
 import java.util.List;
