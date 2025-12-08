@@ -1,13 +1,12 @@
 package kayquemarques.service;
 
-
 import kayquemarques.dao.ReservaDAOJSON;
+import kayquemarques.dao.ReservaDTO;
 import kayquemarques.dao.interfaces.Persistencia;
 import kayquemarques.exception.DadosInvalidosException;
 import kayquemarques.exception.ReservaNaoEncontradaException;
 import kayquemarques.exception.ReservaSobrepostaException;
 import kayquemarques.model.Reserva;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +19,8 @@ public class ReservaService {
         this.dao = new ReservaDAOJSON();
     }
 
-    public void salvar(Reserva novaReserva) {
-
+    public void salvar(ReservaDTO dto) {
+        Reserva novaReserva = new Reserva(dto);
         if (novaReserva == null)
             throw new DadosInvalidosException("A reserva não pode ser nula.");
 

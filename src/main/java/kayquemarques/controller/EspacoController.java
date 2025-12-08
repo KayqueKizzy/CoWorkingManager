@@ -1,5 +1,6 @@
 package kayquemarques.controller;
 
+import kayquemarques.dao.EspacoDTO;
 import kayquemarques.model.Espaco;
 import kayquemarques.model.SalaDeReuniao;
 import kayquemarques.model.CabineIndividual;
@@ -12,28 +13,26 @@ public class EspacoController {
 
     private final EspacoService service;
 
-    public EspacoController(EspacoService service) {
-        this.service = service;
+    public EspacoController() {
+        this.service = new EspacoService();
     }
 
-    public void cadastrarSalaDeReuniao(int id, String nome, int capacidade, boolean disponivel,
-                                       double precoPorHora, boolean usaProjetor) {
+    public void cadastrarSalaDeReuniao(EspacoDTO dto) {
 
-        Espaco espaco = new SalaDeReuniao(id, nome, capacidade, disponivel, precoPorHora, usaProjetor);
+        Espaco espaco = new SalaDeReuniao(dto);
+
         service.salvar(espaco);
     }
 
-    public void cadastrarCabine(int id, String nome, int capacidade, boolean disponivel,
-                                double precoPorHora) {
+    public void cadastrarCabine(EspacoDTO dto) {
 
-        Espaco espaco = new CabineIndividual(id, nome, capacidade, disponivel, precoPorHora);
+        Espaco espaco = new CabineIndividual(dto);
         service.salvar(espaco);
     }
 
-    public void cadastrarAuditorio(int id, String nome, int capacidade, boolean disponivel,
-                                   double precoPorHora, boolean temPalco, int capacidadeExtra) {
+    public void cadastrarAuditorio(EspacoDTO dto) {
 
-        Espaco espaco = new Auditorio(id, nome, capacidade, disponivel, precoPorHora, temPalco, capacidadeExtra);
+        Espaco espaco = new Auditorio(dto);
         service.salvar(espaco);
     }
 

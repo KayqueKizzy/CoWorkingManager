@@ -10,7 +10,10 @@ public class CabineIndividual extends Espaco {
         super(id, nome, capacidade, disponivel, precoPorHora);
         this.TIPO = TIPO;
     }
-
+    public CabineIndividual(String nome, int capacidade, boolean disponivel, double precoPorHora) {
+        super( nome, capacidade, disponivel, precoPorHora);
+        this.TIPO = TIPO;
+    }
     public CabineIndividual(EspacoDTO espacoDTO) {
         super(espacoDTO);
         this.TIPO = TIPO;
@@ -23,36 +26,10 @@ public class CabineIndividual extends Espaco {
         }
         return custo;
     }
+
     @Override
     public String toString() {
-        return getNome() + " (Cabine Individual)";
+        return "CabineIndividual{}";
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+

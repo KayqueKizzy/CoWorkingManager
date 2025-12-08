@@ -7,7 +7,6 @@ import kayquemarques.model.Espaco;
 import kayquemarques.exception.DadosInvalidosException;
 import kayquemarques.exception.EspacoNaoEncontradoException;
 import kayquemarques.service.utils.ConversorDTO;
-
 import java.util.List;
 
 public class EspacoService {

@@ -1,7 +1,7 @@
 package kayquemarques.dao;
 
 public class EspacoDTO {
-    private int id;
+    protected Integer id;
     private String nome;
     private int capacidade;
     private boolean disponivel;
@@ -24,7 +24,7 @@ public class EspacoDTO {
         this.temPalco = temPalco;
         this.capacidadeExtra = capacidadeExtra;
     }
-public int getId() {
+public Integer getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public int getId() {
         return precoPorHora;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,10 +1,8 @@
 package kayquemarques.service.utils;
 
 import kayquemarques.dao.EspacoDTO;
-import kayquemarques.model.Auditorio;
-import kayquemarques.model.CabineIndividual;
-import kayquemarques.model.Espaco;
-import kayquemarques.model.SalaDeReuniao;
+import kayquemarques.dao.ReservaDTO;
+import kayquemarques.model.*;
 
 import java.util.List;
 
@@ -31,8 +29,11 @@ public class ConversorDTO {
     }
     public static EspacoDTO conversorEspacoToDTO(Espaco espaco) {
         EspacoDTO dto = new EspacoDTO();
+        if (espaco.getId() != null){
+            dto.setId(espaco.getId());
+        }
 
-        dto.setId(espaco.getId());
+
         dto.setNome(espaco.getNome());
         dto.setCapacidade(espaco.getCapacidade());
         dto.setDisponivel(espaco.isDisponivel());
@@ -59,4 +60,5 @@ public class ConversorDTO {
                 .map(ConversorDTO::conversorDTOToEspaco)
                 .toList();
     }
+
 }

@@ -1,6 +1,8 @@
 package kayquemarques.model;
 
 import kayquemarques.dao.EspacoDTO;
+import kayquemarques.dao.ReservaDTO;
+import kayquemarques.model.Enum.StatusEnum;
 import kayquemarques.service.utils.ConversorDTO;
 
 import java.time.Duration;
@@ -13,7 +15,7 @@ public class Reserva {
     private LocalDateTime inicio;
     private LocalDateTime fim;
     private double valorTotal;
-    private String status;
+    private StatusEnum status;
     private double multaCancelamento;
 
     public Reserva() {}
@@ -35,8 +37,17 @@ public class Reserva {
         this.fim = fim;
 
         this.valorTotal = calcularValorTotal();
-        this.status = "ATIVA";
+        this.status = StatusEnum.ATIVA;
         this.multaCancelamento = 0.0;
+    }
+    public Reserva(ReservaDTO reservaDTO) {
+        this.espaco = reservaDTO.getEspaco();
+        this.inicio = reservaDTO.getInicio();
+        this.fim = reservaDTO.getFim();
+        this.valorTotal = reservaDTO.getValorTotal();
+        this.status = reservaDTO.getStatus();
+        this.multaCancelamento = reservaDTO.getMultaCancelamento();
+
     }
 
     public int getId() {
@@ -59,7 +70,7 @@ public class Reserva {
         return valorTotal;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
@@ -75,7 +86,7 @@ public class Reserva {
         this.multaCancelamento = multaCancelamento;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 
@@ -99,16 +110,10 @@ public class Reserva {
         long minutos = Duration.between(inicio, fim).toMinutes();
         return minutos / 60.0;
     }
-    /**
-     * @return o valor total da reserva com base na duração em horas e no custo por hora do espaço.
-     * */
+
     public double calcularValorTotal() {
         double horas = calcularDuracaoHoras();
-        /** Convertendo EspacoDTO para Espaco usando o ConversorDTO
-         *  como reserva não pode ter classe Espaco diretamente,
-         *  é necessário fazer essa conversão para acessar o método calcularCustoReserva.
-         *
-        * */
+
         Espaco espacoObj = ConversorDTO.conversorDTOToEspaco(espaco);
 
         return espacoObj.calcularCustoReserva((int) Math.ceil(horas));
@@ -126,7 +131,7 @@ public class Reserva {
             throw new IllegalStateException("A reserva não pode ser cancelada.");
 
         double multa = calcularMultaCancelamento();
-        this.status = "CANCELADA";
+        this.status = StatusEnum.CANCELADA;
         this.multaCancelamento = multa;
 
         return multa;
@@ -136,7 +141,7 @@ public class Reserva {
         if (!status.equals("ATIVA"))
             throw new IllegalStateException("A reserva não pode ser concluída.");
 
-        this.status = "CONCLUIDA";
+        this.status = StatusEnum.CONCLUIDA;
     }
 
     @Override

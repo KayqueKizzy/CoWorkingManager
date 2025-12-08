@@ -1,56 +1,23 @@
 [
   {
-    "id": 2,
-    "nome": "Auditório de Teste",
-    "capacidade": 50,
+    "id": 1,
+    "nome": "jabu",
+    "capacidade": 666,
     "disponivel": true,
-    "precoPorHora": 500.0,
-    "TIPO": "Auditório",
-    "usaProjetor": false,
-    "temPalco": true,
-    "capacidadeExtra": 100
-  },
-  {
-    "id": 3,
-    "nome": "Cabine de Teste",
-    "capacidade": 1,
-    "disponivel": true,
-    "precoPorHora": 50.0,
+    "precoPorHora": 6.25,
     "TIPO": "Cabine Individual",
     "usaProjetor": false,
     "temPalco": false,
     "capacidadeExtra": 0
   },
   {
-    "id": 1,
-    "nome": "Sala de Teste Atualizada",
-    "capacidade": 15,
-    "disponivel": false,
-    "precoPorHora": 150.0,
-    "TIPO": "Sala de Reuniao",
-    "usaProjetor": true,
-    "temPalco": false,
-    "capacidadeExtra": 0
-  },
-  {
-    "id": 4,
-    "nome": "Sala de Teste 4",
-    "capacidade": 20,
+    "id": 2,
+    "nome": "missias",
+    "capacidade": 10,
     "disponivel": true,
-    "precoPorHora": 200.0,
-    "TIPO": "Sala de Reuniao",
+    "precoPorHora": 24.0,
+    "TIPO": "Cabine Individual",
     "usaProjetor": false,
-    "temPalco": false,
-    "capacidadeExtra": 0
-  },
-  {
-    "id": 0,
-    "nome": "maillon",
-    "capacidade": 40,
-    "disponivel": true,
-    "precoPorHora": 1000.0,
-    "TIPO": "Sala de Reuniao",
-    "usaProjetor": true,
     "temPalco": false,
     "capacidadeExtra": 0
   }

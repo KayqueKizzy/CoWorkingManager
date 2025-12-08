@@ -3,13 +3,20 @@ package kayquemarques.model;
 import kayquemarques.dao.EspacoDTO;
 
 public abstract class Espaco {
-    private int id;
+    private Integer id;
     private String nome;
     private int capacidade;
     private boolean disponivel;
     private double precoPorHora;
 
-    public Espaco() { }
+    public Espaco() {}
+    // Constructor sem o id para gerar id automaticamente
+    public Espaco (String nome, int capacidade, boolean disponivel, double precoPorHora) {
+        this.nome = nome;
+        this.capacidade = capacidade;
+        this.disponivel = disponivel;
+        this.precoPorHora = precoPorHora;
+    }
 
     public Espaco(int id, String nome, int capacidade, boolean disponivel, double precoPorHora) {
         this.id = id;
@@ -20,17 +27,22 @@ public abstract class Espaco {
     }
 
     public Espaco(EspacoDTO espacoDTO) {
-        this.id = espacoDTO.getId();
+        /**
+         * validar se o id é nulo antes de atribuir
+         */
+        if (espacoDTO.getId() != null){
+            this.id = espacoDTO.getId();
+         }
         this.nome = espacoDTO.getNome();
         this.capacidade = espacoDTO.getCapacidade();
         this.disponivel = espacoDTO.isDisponivel();
         this.precoPorHora = espacoDTO.getPrecoPorHora();
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,7 +78,6 @@ public abstract class Espaco {
         this.precoPorHora = precoPorHora;
     }
 
-
     public abstract double calcularCustoReserva(int horas);
 
     @Override
@@ -78,8 +89,5 @@ public abstract class Espaco {
                 ", disponivel=" + disponivel +
                 ", precoPorHora=" + precoPorHora +
                 '}';
-
-
     }
-
 }

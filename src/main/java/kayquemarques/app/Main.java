@@ -1,9 +1,15 @@
 package kayquemarques.app;
 
 import kayquemarques.controller.*;
+import kayquemarques.dao.EspacoDTO;
+import kayquemarques.dao.ReservaDTO;
 import kayquemarques.service.*;
-
+import kayquemarques.view.EspacoView;
+import kayquemarques.view.ReservaView;
 import java.util.Scanner;
+import static kayquemarques.view.utils.EspacoViewUtils.*;
+import static kayquemarques.view.utils.ReservaViewUtils.criarNovaReserva;
+import static kayquemarques.view.utils.ReservaViewUtils.exibirMenuReserva;
 
 public class Main {
 
@@ -12,64 +18,50 @@ public class Main {
         EspacoController espacoController;
         ReservaController reservaController;
         PagamentoController pagamentoController;
+        EspacoView espacoView = new EspacoView();
+        ReservaView reservaView = new ReservaView();
+        EspacoDTO dto;
+        EspacoView view = new EspacoView();
 
         while (controle) {
-            System.out.println("Bem-vindo ao sistema de gerenciamento de espaços e reservas!" +
-                    "nEscolha uma opção:" +
-                    "\n1. Gerenciar Espaços" +
-                    "\n2. Gerenciar Reservas" +
-                    "\n3. Sair");
+            menuPrincipal();
             Scanner sc = new Scanner(System.in);
             String escolha = sc.nextLine();
 
             switch (escolha) {
                 case "1":
-                    System.out.println("Gerenciamento de Espaços selecionado." +
-                            "O que você gostaria de fazer?" +
-                            "\n1. Adicionar Espaço" +
-                            "\n2. Listar Espaços" +
-                            "\n3. Remover Espaço" +
-                            "\n4. Atualizar espaço" +
-                            "\n5  buscar espaco pelo ID(codigo)" +
-                            "\n6. Voltar ao menu principal" +
-                            "digite a opção:");
+                    exibirMenuEspaco();
                     String escolhaEspaco = sc.nextLine();
+                    espacoController = new EspacoController();
                     boolean condicaoEscolhaEspaco = true;
+
                     while (condicaoEscolhaEspaco){
                         switch (escolhaEspaco) {
-                            case "1":
-                                espacoController = new EspacoController( new EspacoService());
 
-                                System.out.println("Adicionar Espaço selecionado.");
-                                System.out.println("Escolha o tipo de espaço a adicionar:" +
-                                        "\n1. Sala de Reunião" +
-                                        "\n2. Cabine Individual" +
-                                        "\n3. Auditório" +
-                                        "\n4  Voltar ao menu anterior");
+                            case "1":
+                                espacoController = new EspacoController();
+                                criarCadastroEspaco();
                                 String tipoEspaco = sc.nextLine();
-                                System.out.println("Digite o nome do espaço:");
-                                String nome = sc.nextLine();
-                                System.out.println("Digite a capacidade do espaço:");
-                                int capacidade = Integer.parseInt(sc.nextLine());
-                                System.out.println("O espaço está disponível? (true/false):");
-                                boolean disponivel = Boolean.parseBoolean(sc.nextLine());
-                                System.out.println("Digite o preço por hora:");
-                                double precoPorHora = Double.parseDouble(sc.nextLine());
+                                dto = view.criarEspaco(tipoEspaco);
+
                                 switch (tipoEspaco) {
                                     case "1":
-                                        System.out.println("A sala de reunião usa projetor? (true/false):");
-                                        boolean usaProjetor = Boolean.parseBoolean(sc.nextLine());
-                                        espacoController.cadastrarSalaDeReuniao(0, nome, capacidade, disponivel, precoPorHora, usaProjetor);
+                                       espacoController.cadastrarCabine(dto);
                                         break;
                                     case "2":
-                                        espacoController.cadastrarCabine(0, nome, capacidade, disponivel, precoPorHora);
+                                        espacoController.cadastrarAuditorio(dto);
                                         break;
                                     case "3":
-                                        System.out.println("O auditório tem palco? (true/false):");
-                                        boolean temPalco = Boolean.parseBoolean(sc.nextLine());
-                                        System.out.println("Digite a capacidade extra do auditório:");
-                                        int capacidadeExtra = Integer.parseInt(sc.nextLine());
-                                        espacoController.cadastrarAuditorio(0, nome, capacidade, disponivel, precoPorHora, temPalco, capacidadeExtra);
+                                        espacoController.cadastrarSalaDeReuniao(dto);
+                                        break;
+                                    case "4":
+                                        System.out.println("Voltando ao menu De Espaços.");
+                                        condicaoEscolhaEspaco = false;
+                                        break;
+                                    case "5":
+                                        System.out.println("Voltando ao menu central.");
+                                        controle = true;
+                                        condicaoEscolhaEspaco = false;
                                         break;
                                     default:
                                         System.out.println("Tipo de espaço inválido.");
@@ -77,19 +69,25 @@ public class Main {
                                 break;
                             case "2":
                                 System.out.println("Listar Espaços selecionado.");
-                                // Aqui você pode adicionar a lógica para listar espaços
+                                espacoController.listar().forEach(espaco -> {
+                                    System.out.println(espaco);
+                                });
                                 break;
                             case "3":
-                                System.out.println("Remover Espaço selecionado.");
-                                // Aqui você pode adicionar a lógica para remover um espaço
+                                System.out.println("Atualizar Dados do Espaço: ");
+
+
                                 break;
                             case "4":
-                                System.out.println("Atualizar Espaço selecionado.");
-                                // Aqui você pode adicionar a lógica para atualizar um espaço
+                                System.out.println("Remover Espaço selecionado.");
+                                removendoEspaco();
+                                espacoController.remover(view.solicitarIdEspaco());
+
                                 break;
                             case "5":
                                 System.out.println("Buscar Espaço por ID selecionado.");
-                                // Aqui você pode adicionar a lógica para buscar um espaço pelo ID
+                                buscandoEspacoPorId();
+                                System.out.println(espacoController.buscarPorId(view.solicitarIdEspaco()));
                                 break;
                             case "6":
                                 System.out.println("Voltando ao menu principal.");
@@ -97,28 +95,27 @@ public class Main {
                             default:
                                 System.out.println("Opção inválida. Por favor, tente novamente.");
                         }
-                        break;
+                        System.out.println("gostaria de continiar no gerenciamento de espaços? (s/n)");
+                        String resposta = sc.nextLine();
+                        if (resposta.equalsIgnoreCase("n")) {
+                            condicaoEscolhaEspaco = false;
+                        }
                     }
                 case "2":
-                    System.out.println("Gerenciamento de Reservas selecionado.");
                     boolean condicaoEscolhaReserva = true;
                     reservaController = new ReservaController();
 
                     while (condicaoEscolhaReserva){
-                        System.out.println("O que você gostaria de fazer?" +
-                                "\n1. Adicionar Reserva" +
-                                "\n2. Listar Reservas" +
-                                "\n3. Remover Reserva" +
-                                "\n4. Voltar ao menu principal" +
-                                "digite a opção:");
-
+                        exibirMenuReserva();
                         String escolhaReserva = sc.nextLine();
-
+                        ReservaDTO reservaDTO;
                         switch (escolhaReserva) {
                             case "1":
-                                System.out.println("Adicionar Reserva selecionado.");
+                                criarNovaReserva();
+                                reservaDTO = reservaView.criarReserva();
 
-
+                                reservaController.criarReserva(reservaDTO, 2);
+                                System.out.println("Reserva adicionada com sucesso!");
                                 break;
                             case "2":
                                 System.out.println("Listar Reservas selecionado.");

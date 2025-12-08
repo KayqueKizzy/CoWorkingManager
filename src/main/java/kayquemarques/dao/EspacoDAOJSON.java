@@ -1,15 +1,9 @@
 package kayquemarques.dao;
 
-
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import kayquemarques.dao.interfaces.EspacoDAO;
-import kayquemarques.model.Auditorio;
-import kayquemarques.model.CabineIndividual;
 import kayquemarques.model.Espaco;
-import kayquemarques.model.SalaDeReuniao;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +20,9 @@ public class EspacoDAOJSON implements EspacoDAO {
     @Override
     public void salvar(EspacoDTO espaco) {
         List<EspacoDTO> lista = buscarTodos();
+        if (espaco.getId() == null  || espaco.getId() == 0 ) {
+            espaco.setId(lista.size() + 1);
+        }
         lista.removeIf(e -> e.getId() == espaco.getId());
         lista.add(espaco);
         salvarTodos(lista);
